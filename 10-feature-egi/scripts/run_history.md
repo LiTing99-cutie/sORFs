@@ -1,0 +1,1 @@
+nohup bash ribo.expr.whole.db.20250910.sh > ../ribo.expr.whole.db.20250910.log &

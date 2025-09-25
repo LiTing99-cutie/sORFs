@@ -1,0 +1,1 @@
+/home/user/data3/lit/project/sORFs/01-ribo-seq/ref/Ribo-seq-Tool-Comparison-Scripts-v2.0/Scripts_for_RiboCode_Analysis/Formatting_RiboCode_gtf.py

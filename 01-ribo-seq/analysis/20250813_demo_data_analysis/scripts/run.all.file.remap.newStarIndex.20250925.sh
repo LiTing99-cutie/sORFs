@@ -1,0 +1,2 @@
+cat <(find /home/user/data3/lit/project/sORFs/01-ribo-seq/analysis/20250722_formal_data_run/processed/batch_1 -name "*trimmed.rRNA.tRNA.snoRNA.unaligned.fq.gz") \
+<(find /home/user/data3/lit/project/sORFs/01-ribo-seq/analysis/20250813_demo_data_analysis/processed/batch_1 -name "*trimmed.rRNA.tRNA.snoRNA.unaligned.fq.gz")

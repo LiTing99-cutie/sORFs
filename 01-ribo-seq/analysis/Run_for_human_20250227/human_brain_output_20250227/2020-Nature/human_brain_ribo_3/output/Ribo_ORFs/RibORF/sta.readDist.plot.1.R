@@ -1,0 +1,6 @@
+A <- read.table (".//sta.read.dist.1.txt", sep="\t", header=T)
+pdf (file=".//sta.readDist.plot.1.pdf")
+barplot(A[,2], names.arg = A[,1], beside=T, ylab="Read number")
+barplot(as.matrix(t(A[,3:5])), names.arg = A[,1], beside=T, ylim=c(0,1), legend=T)
+abline(h=0.5, lty="dotted")
+dev.off()

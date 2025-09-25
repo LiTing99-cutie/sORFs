@@ -1,0 +1,6 @@
+A <- read.table ("mouse_brain_output_20241011/2015_Science_ChoJ_hippocampus/SRR2163083/output/Ribo-ORFs/RibORF/sta.read.dist.25,26,27,28,29,30,31,32,33,34,.txt", sep="\t", header=T)
+pdf (file="mouse_brain_output_20241011/2015_Science_ChoJ_hippocampus/SRR2163083/output/Ribo-ORFs/RibORF/sta.readDist.plot.25,26,27,28,29,30,31,32,33,34,.pdf")
+barplot(A[,2], names.arg = A[,1], beside=T, ylab="Read number")
+barplot(as.matrix(t(A[,3:5])), names.arg = A[,1], beside=T, ylim=c(0,1), legend=T)
+abline(h=0.5, lty="dotted")
+dev.off()

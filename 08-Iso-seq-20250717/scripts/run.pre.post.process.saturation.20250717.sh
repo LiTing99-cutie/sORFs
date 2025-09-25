@@ -1,0 +1,4 @@
+bash isoseq_bulk_preprocess_v1_20250710.sh
+bash isoseq_bulk_postprocess_v1_20250710.sh
+source activate biotools
+python3 saturation_curve_data_generator_v1_20250716.py ../processed/classify/collapsed_classification.filtered_lite_classification.txt --max-samples 100 ../results/replicate_15.sample_100
