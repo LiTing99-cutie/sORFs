@@ -42,3 +42,6 @@ nohup bash call-orfs/ribo.seq.tools.build.anno.20250924.sh &> ../log/ribo.seq.to
 nohup bash call-orfs/call.orfs.test.sh $(realpath ../processed/orfs) \
   $(realpath ../processed/merged_bam/Aligned.toTranscriptome.out.bam) \
   $(realpath ../processed/merged_bam/Aligned.sortedByCoord.out.bam)  &> ../log/call.orfs.20250923.log &
+
+# 五、鉴定ORF之前transcriptome bam需要重新比对
+nohup bash run.all.file.remap.newStarIndex.20250925.sh &> run.all.file.remap.newStarIndex.20250925.log &

@@ -130,3 +130,13 @@ bash id.convert.20250911.sh ../processed/tmp/ms_closed.unique.protein.txt \
                    ../processed/tmp/pep.orf.rePicked.txt
 #####  4、在建模前，过滤掉那些和经典的ORF有重叠的ORF，顺便计算下in-frame的重叠的比例 ##### 
 sep_gtf=/home/user/data3/lit/project/sORFs/02-Mass-spec-20250723/analysis/20250910_c8_protein_map/results/1/augment_orf_table/sub.gtf
+
+#####  5、计算periodicity ##### 
+/home/user/data3/lit/project/sORFs/01-ribo-seq/analysis/20250909_org_all_data/processed/all.offsetCorrected.merged.sorted.bam
+/home/user/data3/lit/project/sORFs/02-Mass-spec-20250723/analysis/20250910_c8_protein_map/results/1/augment_orf_table/sub.genepred
+
+python psite_frames.20250925.py \
+  --bam /home/user/data3/lit/project/sORFs/01-ribo-seq/analysis/20250909_org_all_data/processed/all.offsetCorrected.merged.sorted.bam \
+  --annot /home/user/data3/lit/project/sORFs/02-Mass-spec-20250723/analysis/20250910_c8_protein_map/results/1/augment_orf_table/sub.gtf \
+  --format gtf \
+  --out psite_frame_stats.tsv

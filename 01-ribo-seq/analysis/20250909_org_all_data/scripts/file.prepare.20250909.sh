@@ -10,7 +10,7 @@ cat $offset_tab_all_1 $offset_tab_all_2 > ../results/offset.tab.all.txt
 
 less ../results/offset.tab.all.txt|awk -v OFS='\t' '{print $1,$2,$3+3}' > ../processed/offset.tab.all.ribtish.txt
 
-RibORF_path=/home/user/data2/lit/software/RibORF/RibORF.2.0
-perl $RibORF_path/offsetCorrect.pl -r $sam_input -p offset.correction.parameters.txt -o $sam_output
-bam_output=$(echo $sam_output|sed 's/.sam/.bam/')
-samtools view -@ 40 -bh $sam_output > $bam_output && rm -rf $sam_output
+# RibORF_path=/home/user/data2/lit/software/RibORF/RibORF.2.0
+# perl $RibORF_path/offsetCorrect.pl -r $sam_input -p offset.correction.parameters.txt -o $sam_output
+# bam_output=$(echo $sam_output|sed 's/.sam/.bam/')
+# samtools view -@ 40 -bh $sam_output > $bam_output && rm -rf $sam_output
