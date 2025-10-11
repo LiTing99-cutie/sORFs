@@ -96,29 +96,28 @@ python3 spearman_corr.v2.py \
 time bash run.all.20250912.sh 21pcw_1_C8_T_T
 
 #####  2、所有样本 ##### 
-bash run.all.sample.20250917.sh &> ../log/run.all.sample.20250917.log
-
-## 添加起始位点和终止位点以及CDS序列
-mkdir ../processed/augment_orf_table
-bash augment_orf_table.sh ../results/orfs_merged_final.tsv ../processed/augment_orf_table
-
 # 更改参数，重新运行【先assign肽段，再进行过滤】【以这个为准】
+# 20251010，添加source信息，重新运行
 nohup bash run.all.sample.20250918.sh \
   --by-sample-dir ../processed/by_sample/1 \
   --logroot ../logs/1 \
   --results-dir ../results/1 \
   --nproc 8 \
-  --rpf-min 0 --ps-min 0 --min-c 0 &>run.all.sample.20250918.log &
-
-mkdir ../results/1/augment_orf_table
+  --rpf-min 0 --ps-min 0 --min-c 0 &>../log/1/run.all.sample.20251010.log &
+## 添加起始位点和终止位点以及CDS序列
+mkdir -p ../results/1/augment_orf_table
 bash augment_orf_table.sh ../results/1/orfs_merged_final.tsv ../results/1/augment_orf_table
 #####  3、sORF很多，但是kozak等pattern并不好 ##### 
 # 以C8为例，查看肽段的来源
 sample=21pcw_1_C8_T_T
+# 31106
 awk '$4=="'$sample'"' ../MS_res_from_Galaxy/merged.peptide.tsv|wc -l
+# 26357
 awk '$4=="'$sample'"' ../MS_res_from_Galaxy/merged.peptide.tsv|grep msfragger_closed| wc -l
+# 9387
 join -1 1 -2 1 <(sort -k1,1 ../processed/by_sample/1/21pcw_1_C8_T_T/pep_assign/assignments.unique.post.tsv) \
  <(awk '$4=="'$sample'"' ../MS_res_from_Galaxy/merged.peptide.tsv|sort -k1,1)|wc -l
+# 7651
 join -1 1 -2 1 <(sort -k1,1 ../processed/by_sample/1/21pcw_1_C8_T_T/pep_assign/assignments.unique.post.tsv) \
  <(awk '$4=="'$sample'"' ../MS_res_from_Galaxy/merged.peptide.tsv|sort -k1,1)|grep msfragger_closed|wc -l
 
@@ -128,15 +127,21 @@ id_map=$proj_path/09-CustomDb/formal_20250821/processed/annotation/RibORF_annot/
 bash id.convert.20250911.sh ../processed/tmp/ms_closed.unique.protein.txt \
                    "$id_map" \
                    ../processed/tmp/pep.orf.rePicked.txt
-#####  4、在建模前，过滤掉那些和经典的ORF有重叠的ORF，顺便计算下in-frame的重叠的比例 ##### 
+# 17538
+wc -l  ../processed/tmp/pep.orf.rePicked.txt
+#####  4、在建模前，过滤掉那些和经典的ORF有重叠的ORF，顺便计算下in-frame的重叠的比例 #####
+conda activate base
 sep_gtf=/home/user/data3/lit/project/sORFs/02-Mass-spec-20250723/analysis/20250910_c8_protein_map/results/1/augment_orf_table/sub.gtf
-
+anno_gtf=/home/user/data2/lit/project/ZNF271/data/annotation/gencode.v41.annotation.gtf
+python3 orf_overlap_inframe.py --new-gtf $sep_gtf --ann-gtf $anno_gtf --out ../results/1/orf_overlap_inframe.txt
 #####  5、计算periodicity ##### 
-/home/user/data3/lit/project/sORFs/01-ribo-seq/analysis/20250909_org_all_data/processed/all.offsetCorrected.merged.sorted.bam
-/home/user/data3/lit/project/sORFs/02-Mass-spec-20250723/analysis/20250910_c8_protein_map/results/1/augment_orf_table/sub.genepred
-
-python psite_frames.20250925.py \
-  --bam /home/user/data3/lit/project/sORFs/01-ribo-seq/analysis/20250909_org_all_data/processed/all.offsetCorrected.merged.sorted.bam \
-  --annot /home/user/data3/lit/project/sORFs/02-Mass-spec-20250723/analysis/20250910_c8_protein_map/results/1/augment_orf_table/sub.gtf \
+bam=/home/user/data3/lit/project/sORFs/01-ribo-seq/analysis/20250909_org_all_data/processed/all.offsetCorrected.merged.sorted.bam
+gtf=/home/user/data3/lit/project/sORFs/02-Mass-spec-20250723/analysis/20250910_c8_protein_map/results/1/augment_orf_table/sub.gtf
+mkdir -p ../results/1/peri/
+python3 calcu_peri/psite_frame_stats.v1.py \
+  --bam $bam \
+  --annot $gtf \
   --format gtf \
-  --out psite_frame_stats.tsv
+  --key-attr gene_id \
+  --out ../results/1/peri/psite_frame_stats.v1.tsv \
+  --log-every 2000

@@ -15,6 +15,7 @@ MIN_C="0.2"
 
 PEP_ORF_MERGED="../MS_res_from_Galaxy/pep.orf.merged.txt"
 INTENSITY_MERGED="../MS_res_from_Galaxy/peptide_intensity_IL.merged.tsv"
+file2=../MS_res_from_Galaxy/merged.peptide.tsv                            # 列: Peptide_I_L_equal Source Source_number Sample
 
 RUN_EACH_SAMPLE="./run.all.steps.20250918.v3.sh"   # <- 新版每样本脚本名
 SPLIT_BY_SAMPLE="split_by_sample.py"
@@ -86,6 +87,7 @@ main() {
   ALL_ASSIGN="${RESULTS_DIR}/all_samples.assignments.unique.post.tsv"
   FOLDED="${RESULTS_DIR}/ibaq_orf_folded.tsv"
   UNIQ_PEP="${RESULTS_DIR}/unique_peptide_counts.tsv"
+  UNIQ_PEP_with_source="${RESULTS_DIR}/unique_peptide_counts_with_source.tsv"
   MEAN_REL_IBAQ="${RESULTS_DIR}/ibaq_orf_mean_relative.tsv"
   MERGED_FINAL="${RESULTS_DIR}/orfs_merged_final.tsv"
   SPEARMAN_OUT="${RESULTS_DIR}/spearman_results.tsv"
@@ -160,16 +162,56 @@ main() {
          for(id in cnt) print id "\t" cnt[id] }
   ' "$ALL_ASSIGN" | sort -k1,1 > "$UNIQ_PEP"
 
+  file1=$ALL_ASSIGN   # 列: Peptide Assigned_protein_id reason Sample
+
+  awk -F'\t' -v OFS='\t' '
+    # ---------- 读 文件2：建立 (Peptide_I_L_equal,Sample) 是否含 msfragger_closed 的映射 ----------
+    NR==FNR {
+      if (FNR==1) { for(i=1;i<=NF;i++) h2[$i]=i; next }
+      k = $h2["Peptide_I_L_equal"] "\t" $h2["Sample"]
+      if ($h2["Source"] ~ /msfragger_closed/) closed[k]=1
+      next
+    }
+
+    # ---------- 读 文件1：统计 ----------
+    FNR==1 { for(i=1;i<=NF;i++) h1[$i]=i; next }
+
+    {
+      p = $h1["Peptide"]
+      id= $h1["Assigned_protein_id"]   # ORF_id
+      s = $h1["Sample"]
+      if (p=="" || id=="") next
+
+      pair = p "\t" id
+      # 总 unique（跨样本去重）
+      if (!(pair in seen)) { seen[pair]=1; cnt[id]++ }
+
+      # 若该 (Peptide, Sample) 在文件2中标注过 msfragger_closed，则记为 closed-unique
+      k = p "\t" s
+      if (k in closed && !(pair in seen_closed)) { seen_closed[pair]=1; cnt_closed[id]++ }
+    }
+
+    END {
+      print "ORF_id","Unique_peptide_n","Unique_peptide_n_msfragger_closed"
+      for (id in cnt) {
+        c2 = (id in cnt_closed) ? cnt_closed[id] : 0
+        print id, cnt[id], c2
+      }
+    }
+  ' "$file2" "$file1" | sort -k1,1 > "$UNIQ_PEP_with_source"
+
+  echo "[OK] 写出：$UNIQ_PEP_with_source"
+
   # 7) 计算相对 iBAQ
   log "Mean relative iBAQ -> $MEAN_REL_IBAQ"
   python3 "$ORF_MEAN_REL_IBAQ" --in "$ALL_IBAQ_B" --metric iBAQ_A --out "$MEAN_REL_IBAQ"
 
   # 8) 合并全部
-  for f in "$RPF" "$ISO" "$RNA" "$GENE_ANNO" "$UNIQ_PEP" "$MEAN_REL_IBAQ"; do check_file "$f"; done
+  for f in "$RPF" "$ISO" "$RNA" "$GENE_ANNO" "$UNIQ_PEP_with_source" "$MEAN_REL_IBAQ"; do check_file "$f"; done
   log "Merge all -> $MERGED_FINAL"
   python3 "$MERGE_TABLES_ALL" \
     --ibaq "$FOLDED" --rpf "$RPF" --iso "$ISO" --rna "$RNA" \
-    --gene_anno "$GENE_ANNO" --uniq_pep "$UNIQ_PEP" --rel_ibaq "$MEAN_REL_IBAQ" \
+    --gene_anno "$GENE_ANNO" --uniq_pep "$UNIQ_PEP_with_source" --rel_ibaq "$MEAN_REL_IBAQ" \
     --out "$MERGED_FINAL"
 
   # 9) 相关性

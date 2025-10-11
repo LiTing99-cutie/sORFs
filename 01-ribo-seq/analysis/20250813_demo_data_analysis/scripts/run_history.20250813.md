@@ -1,4 +1,4 @@
-# 1一、qc，去除污染，比对
+# 一、qc，去除污染，比对
 ## 生成原始数据list文件
 proj_path=/home/user/data3/lit/project/sORFs/01-ribo-seq
 raw_data_path=$proj_path/rawdata/demo_20250813/org_rename
@@ -17,7 +17,6 @@ mkdir -p ../figures/batch_1/qual_assess
 Rscript Uni.organize.v1.20250730.R $(realpath ../results/batch_1/qual_assess) \
     $(realpath ../figures/batch_1/qual_assess)
 
-
 # 三、测序饱和分析
 ## 合并所有的bam
 mkdir -p ../processed/batch_1_2_merged
@@ -35,13 +34,17 @@ bash run.saturation.20250815.1.sh
 bash run.saturation.20250823.2.sh
 
 # 四、鉴定ORF
+## 初始版本误删了，使用保留的结果文件
 nohup bash call-orfs/merge.bam.20250923.sh &> ../log/merge.bam.20250923.log &
 nohup bash call-orfs/ribo.seq.tools.build.anno.20250924.sh &> ../log/ribo.seq.tools.build.anno.20250924.log &
 - 激活biotools conda环境之后PRICE在终端运行完毕
 - 此外Warning: the stop codon is discontinuous,only first region is used, PB.17993.17这条warining可以忽略
-nohup bash call-orfs/call.orfs.test.sh $(realpath ../processed/orfs) \
+nohup bash call-orfs/call.orfs.20250923.sh $(realpath ../processed/orfs) \
   $(realpath ../processed/merged_bam/Aligned.toTranscriptome.out.bam) \
   $(realpath ../processed/merged_bam/Aligned.sortedByCoord.out.bam)  &> ../log/call.orfs.20250923.log &
-
+## 激活biotools环境，运行程序
+nohup bash call-orfs/call.orfs.20251010.sh $(realpath ../processed/orfs) \
+  $(realpath ../processed/merged_bam/Aligned.toTranscriptome.out.bam) \
+  $(realpath ../processed/merged_bam/Aligned.sortedByCoord.out.bam)  &> ../log/call.orfs.20251010.log &
 # 五、鉴定ORF之前transcriptome bam需要重新比对
 nohup bash run.all.file.remap.newStarIndex.20250925.sh &> run.all.file.remap.newStarIndex.20250925.log &
