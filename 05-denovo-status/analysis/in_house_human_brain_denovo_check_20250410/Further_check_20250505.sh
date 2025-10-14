@@ -22,6 +22,7 @@ total_cds_fa=/home/user/data3/lit/project/sORFs/03-Cross-anna/analysis/annotate_
 seqkit grep -f $gene_lst $total_cds_fa > target.cds.fa
 query=target.cds.fa
 genome=/home/user/data/lit/database/public/genome/hg38/hg38.fa
+# ensembl 106
 cdna_fa=/home/user/data/lit/database/public/annotation/gene_and_gene_predictions/Homo_sapiens.GRCh38.cdna.all.fa
 makeblastdb -in $cdna_fa -dbtype nucl
 refDir=/home/user/data3/rbase/genome_ref/Homo_sapiens/hg38/fasta
