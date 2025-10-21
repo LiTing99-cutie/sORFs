@@ -32,6 +32,3 @@ while read -r chr; do
         grep -A1 -F "$id" $orfs_pep_fa > ${output_path}/per_chr/peptide_fa/$chr/$id.ORF_pep.fa
     done 
 done < "${chr_list_file}"
-
-
-# 
