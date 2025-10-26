@@ -64,3 +64,6 @@ python $make_orf_id_custom_script --in $output_path/augmented.tsv \
   --codon5 ORF_start \
 	--codon3 ORF_end \
   --aa-col Seq
+
+# 整理得到更具翻译潜力的ORF子集
+nohup bash build.custom.db.use.ribo.v2.20251021.sh &> ../log/build.custom.db.use.ribo.v2.20251021.log &

@@ -24,3 +24,6 @@ path=/home/user/data3/lit/project/sORFs/07-Genome/processed/vcf_filter/
 gunzip -c $path/human_brain_21pcw_filtered_pass.vcf.gz > $path/human_brain_21pcw_filtered_pass.vcf
 bcftools view -H $path/human_brain_21pcw_filtered_pass.vcf|head -n 1000 >  $path/subset_1000.vcf
 nohup bash annotate_vcf_vep_v1_20250718.1.sh &> ../log/annotate_vcf_vep_v1_20250718.20250718.1.log &
+
+## 2025-08-21 
+gene.consensus.fasta.based.on.hom.snp.20250821.sh
