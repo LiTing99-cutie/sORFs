@@ -1,0 +1,2 @@
+seqkit seq -M 150 /rd1/user/lit/project/sORFs/custom_database/human/uniprot/uniprotkb_taxonomy_id_9606_AND_reviewed_2025_03_24.fasta | seqkit seq -n |cut -f1 -d " " > ../results/S3/uniprot.human.sep.id.txt
+parallel -j 30 --pipepart --block 100M -a ../results/S2/total_psm.txt grep -f ../results/S3/uniprot.human.sep.id.txt > ../results/S3/psm_contain_cano_sep.txt

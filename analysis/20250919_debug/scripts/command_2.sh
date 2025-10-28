@@ -1,0 +1,1 @@
+parallel -j 30 --pipepart --block 100M -a /rd1/user/lit/project/sORFs/analysis/20250721_human_ms_run/results/S2/total_psm.txt grep -f /rd1/user/lit/project/sORFs/analysis/20250721_human_ms_run/results/S3/uniprot.human.sep.id.txt > /rd1/user/lit/project/sORFs/analysis/20250721_human_ms_run/results/S3/psm_contain_cano_sep.txt
