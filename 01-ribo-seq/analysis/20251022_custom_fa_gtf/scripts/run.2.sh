@@ -21,4 +21,4 @@ awk -F'\t' 'NR==1{print; next} {
 }' OFS='\t' ../figures/qual_assess/stat.all.org.txt > ../figures/qual_assess/stat.all.org.1.txt
 
 # 2、测序饱和分析
-bash run.saturation.20250823.2.sh
+bash run.saturation.20251026.sh

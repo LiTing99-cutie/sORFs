@@ -67,3 +67,5 @@ python $make_orf_id_custom_script --in $output_path/augmented.tsv \
 
 # 整理得到更具翻译潜力的ORF子集
 nohup bash build.custom.db.use.ribo.v2.20251021.sh &> ../log/build.custom.db.use.ribo.v2.20251021.log &
+
+# 20251103

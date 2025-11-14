@@ -20,3 +20,6 @@ nohup bash Run.20251022.custom.fa.gtf.sh &> ./log/Run.20251022.custom.fa.gtf.log
 nohup bash Run.20251022.custom.fa.gtf.rerun.sh &> ./log/Run.20251022.custom.fa.gtf.rerun.log &
 ## 【以最后一版为准，存在修改】
 nohup bash Run.20251022.custom.fa.gtf.rerun.sh &> ./log/Run.20251022.custom.fa.gtf.rerun.1.log &
+merged_bam_dir=/home/user/data3/lit/project/sORFs/06-RNA-seq/02-output-custom-fa-gtf-20251022/mapping/merge/
+mkdir -p $merged_bam_dir
+nohup samtools merge -@ 30 -o $merged_bam_dir/Total.bam /home/user/data3/lit/project/sORFs/06-RNA-seq/02-output-custom-fa-gtf-20251022/mapping/*bam &

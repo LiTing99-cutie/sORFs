@@ -30,7 +30,7 @@ genePred=/home/user/data3/lit/project/sORFs/08-Iso-seq-20250717/results/custom.g
 fa=/home/user/data3/lit/project/sORFs/07-Genome/results/custom_fa/custom_ref.fa
 
 project_path=/home/user/data3/lit/project/sORFs/01-ribo-seq
-organize_res_script_path=$project_path/analysis/20250813_demo_data_analysis/scripts/organize_res
+organize_res_script_path=$project_path/analysis/20251022_custom_fa_gtf/scripts/organize_res
 translate_script=$project_path/scripts_collapse_20250730/S3.0c.Uni.translate_gtf.v2.20250325.sh
 
 price_script=$organize_res_script_path/S3.0b.Uni.Generate_genepred_PRICE_v1.py

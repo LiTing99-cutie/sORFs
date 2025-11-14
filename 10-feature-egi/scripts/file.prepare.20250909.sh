@@ -33,3 +33,10 @@ NR==1{next}
 
   print id, rpf, ps, rpf_rpkm, ps_rpkm, rpf_cov, ps_cov
 }' > "$out"
+
+# 计算TPM
+bash calcu.ribo.rela.20251104.sh -i ../processed/ribo/counts.txt -o ../processed/feature_preprare/orf.rpf.psite.1.txt
+# bash calcu.ribo.rela.20251104.sh ../processed/ribo/counts.txt ../processed/feature_preprare/orf.rpf.psite.1.txt
+# python ribo_counts_to_metrics.py \
+#   --in ../processed/ribo/counts.txt \
+#   --out ../processed/feature_preprare/orf.rpf.psite.1.txt

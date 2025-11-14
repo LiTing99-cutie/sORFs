@@ -13,8 +13,10 @@ inputfile_2 = pd.read_csv(sys.argv[2], sep='\t', header=None)
 # 读取用户输入的 FDR 阈值和是否过滤 Codon 的标志
 fdr_threshold = float(sys.argv[3])  # 第三个参数作为 FDR 阈值
 filter_codon = float(sys.argv[4])  # 第四个参数表示是否过滤 Codon 为 ATG
+print(filter_codon)
 # 20250424
 filter_nonca = float(sys.argv[5])  # 第五个参数表示是否过滤 类型 为 非CDS
+print(filter_nonca)
 outputfile=sys.argv[6]
 # 校正p值
 import statsmodels.stats.multitest as multi
@@ -23,11 +25,14 @@ inputfile_1['FDR']=multi.multipletests(inputfile_1['p value'].values, method="fd
 # 基于用户输入进行筛选
 query_string = f"FDR <= {fdr_threshold}"
 if filter_codon:
+    print(filter_codon)
     query_string += " and Codon == 'ATG'"
 if filter_nonca:
+    print(filter_nonca)
     query_string += " and Type != 'CDS'"
 
 # 筛选数据
+print(inputfile_1.shape[0])
 inputfile_1 = inputfile_1.query(query_string)
 
 print(inputfile_1.shape[0])

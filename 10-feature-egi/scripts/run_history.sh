@@ -23,3 +23,6 @@ nohup python3 $orf_overlap_inframe_py \
   --out ../processed/feature_preprare/orf_overlap_inframe.txt \
   --tmpdir ../processed/feature_preprare/tmp \
   --faidx /home/user/data/lit/database/public/genome/hg38/hg38.fa.fai &> ../log/orf_overlap_inframe.v2.log &
+
+### 20251106 计算内在结构无序性 ###
+nohup seve_list_compare/compare_ISD.20251106.1.sh > ../log/compare_ISD.20251106.1.log & 

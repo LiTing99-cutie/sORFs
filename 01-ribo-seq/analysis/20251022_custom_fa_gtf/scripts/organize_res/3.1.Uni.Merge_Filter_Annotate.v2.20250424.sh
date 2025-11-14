@@ -13,6 +13,7 @@ awk -v OFS='\t' '{print $1,$2,"RiboCode"}' $organize_res_path/RiboCode/nonCano.s
 awk -v OFS='\t' '{print $1,$2,"RibORF"}' $organize_res_path/RibORF/nonCano.sorf.tab > $output_path/nonCano.sorf.meta.raw.RibORF.txt
 # merge
 cat $output_path/nonCano.sorf.meta.raw.PRICE.txt $output_path/nonCano.sorf.meta.raw.RiboCode.txt $output_path/nonCano.sorf.meta.raw.RibORF.txt | awk -v OFS='\t' '{print $1,$2,$3}' > $output_path/nonCano.sorf.meta.merge.raw.3_ways.txt
+awk -F'\t' 'BEGIN{OFS="\t"} {$2 = "M" substr($2, 2); print}' $output_path/nonCano.sorf.meta.merge.raw.3_ways.txt
 awk -F'\t' 'BEGIN{OFS="\t"}{
   if (match($1, /[+-]chr[^[:space:]]*/)) {
     s = substr($1, RSTART, RLENGTH)      # 提取 +chr... 或 -chr...
@@ -20,4 +21,4 @@ awk -F'\t' 'BEGIN{OFS="\t"}{
   } else {
     print $0, ""                          # 若未匹配到，就追加空值
   }
-}' $output_path/nonCano.sorf.meta.merge.raw.3_ways.txt > $output_path/orfs.3_ways.txt
+}' $output_path/nonCano.sorf.meta.merge.raw.3_ways.txt.1 > $output_path/orfs.3_ways.txt
