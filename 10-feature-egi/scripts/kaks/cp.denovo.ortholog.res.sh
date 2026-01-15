@@ -1,0 +1,75 @@
+#!/bin/bash
+source activate biotools
+id_file="/home/user/data3/lit/project/sORFs/11-denovo-list/processed/new_list_20251128/denovo_list.id.txt"
+denovo_dir=/home/user/data3/lit/project/sORFs/05-denovo-status/analysis/20251128_ortholog_generation/scripts
+target_dir="../processed/seve_list_compare/input_for_ortholog_extraction/ortholog_denovo"
+
+mkdir -p "$target_dir"
+
+echo "Step 1: 并行拷贝nucl文件..."
+
+export denovo_dir target_dir
+
+copy_nucl() {
+    orig_id="$1"
+    # safe_id=$(echo "$orig_id" | sed 's/[^A-Za-z0-9._-]/__/g')
+    safe_id=$(echo "$orig_id" | sed 's/[^A-Za-z0-9._-]/_/g')
+    
+    nucl_file=$(find "$denovo_dir" -type f -name "${safe_id}.*ortholog.nucl.fa" | head -1)
+    
+    if [ -s "$nucl_file" ]; then
+        cp "$nucl_file" "$target_dir/"
+        echo "✓ $(basename "$nucl_file")"
+    elif [ -f "$nucl_file" ]; then
+        echo "✗ 文件为空: $(basename "$nucl_file") (0字节)" >&2
+    else
+        echo "✗ 文件不存在: $orig_id" >&2
+    fi
+}
+
+export -f copy_nucl
+
+# cat "$id_file" |head -n50| parallel -j 50 copy_nucl
+cat "$id_file" | parallel -j 50 copy_nucl
+
+echo ""
+echo "Step 2: 批量翻译nucl → pep..."
+
+# 批量翻译所有nucl文件
+# translate_one() {
+#     nucl_file="$1"
+#     pep_file="${nucl_file%.nucl.fa}.pep.fa"
+    
+#     if transeq -sequence "$nucl_file" -outseq "$pep_file" -frame 1 -table 1 -clean 2>/dev/null; then
+#         sed -i 's/_1$//' "$pep_file"
+#         awk '/^>/ {print; next} {gsub(/X+$/, ""); print}' "$pep_file" > "${pep_file}.tmp" && mv "${pep_file}.tmp" "$pep_file"
+#         echo "✓ 翻译: $(basename "$pep_file")"
+#     else
+#         echo "✗ 翻译失败: $(basename "$nucl_file")" >&2
+# fi
+# }
+
+translate_one() {
+    nucl_file="$1"
+    pep_file="${nucl_file%.nucl.fa}.pep.fa"
+    
+    if /home/user/data3/lit/anaconda3/envs/biotools/bin/python3 kaks/trim_and_translate.py "$nucl_file" "$pep_file"; then
+        echo "✓ 翻译: $(basename "$pep_file")"
+    else
+        echo "✗ 翻译失败: $(basename "$nucl_file")" >&2
+    fi
+}
+
+export -f translate_one
+
+# find "$target_dir" -name "*.ortholog.nucl.fa" | head -n50|parallel -j 50 translate_one
+find "$target_dir" -name "*.ortholog.nucl.fa" |parallel -j 50 translate_one
+# for file in $(find "$target_dir" -name "*.ortholog.nucl.fa");do
+#   translate_one $file
+# done
+
+echo ""
+echo "Done!"
+echo "目标目录: $target_dir"
+echo "nucl文件数: $(ls -1 "$target_dir"/*.nucl.fa 2>/dev/null | wc -l)"
+echo "pep文件数: $(ls -1 "$target_dir"/*.pep.fa 2>/dev/null | wc -l)"

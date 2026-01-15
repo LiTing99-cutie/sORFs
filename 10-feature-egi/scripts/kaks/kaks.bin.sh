@@ -292,10 +292,11 @@ KAKS_RES="${OUTPUT}/kaks.res"
 log "生成详细结果: $KAKS_RES"
 
 # 写入表头
-echo -e "Species_pair\tKa\tKs\tKa/Ks\tS-Substitutions\tN-Substitutions" > $KAKS_RES
+# echo -e "Species_pair\tKa\tKs\tKa/Ks\tS-Substitutions\tN-Substitutions" > $KAKS_RES
+echo -e "Species_pair\tKa\tKs\tKa/Ks\tS-Substitutions\tN-Substitutions\tS-Sites\tN-Sites" > $KAKS_RES
 
 for kaks in $OUTPUT/paraAT_res/*aln.kaks; do
     tail -n +2 $kaks | awk '{
-        print $1"\t"$3"\t"$4"\t"$5"\t"$12"\t"$13
+        print $1"\t"$3"\t"$4"\t"$5"\t"$12"\t"$13"\t"$8"\t"$9
     }'
 done >> $KAKS_RES

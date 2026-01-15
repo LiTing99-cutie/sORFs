@@ -19,8 +19,8 @@ with open(input_file, 'r') as f:
         ka_ks = cols[4]
         
         # 跳过NA值
-        # if ka_ks != 'NA' and ka_ks != '-0':
-        if ka_ks != 'NA':
+        if ka_ks != 'NA' and ka_ks != '-0':
+        # if ka_ks != 'NA':
             ka_ks_value = float(ka_ks)
             if orf not in orf_data:
                 orf_data[orf] = []

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source activate biotools
 id_file="/home/user/data3/lit/project/sORFs/10-feature-egi/processed/seve_list_compare/canonical_orfs.lnc_orfs.intergenic_orfs.id.txt"
 denovo_dir=/home/user/data3/lit/project/sORFs/05-denovo-status/analysis/20251113_lncORF_denovo_check
 target_dir="../processed/seve_list_compare/input_for_ortholog_extraction/ortholog_cano_lnc_intergenic_sample"
@@ -29,18 +29,31 @@ copy_nucl() {
 
 export -f copy_nucl
 
-cat "$id_file" |head -n50| parallel -j 50 copy_nucl
-# cat "$id_file" | parallel -j 50 copy_nucl
+# cat "$id_file" |head -n50| parallel -j 50 copy_nucl
+cat "$id_file" | parallel -j 50 copy_nucl
 
 echo ""
 echo "Step 2: 批量翻译nucl → pep..."
 
 # 批量翻译所有nucl文件
+# translate_one() {
+#     nucl_file="$1"
+#     pep_file="${nucl_file%.nucl.fa}.pep.fa"
+    
+#     if transeq -sequence "$nucl_file" -outseq "$pep_file" -frame 1 -table 1 -clean 2>/dev/null; then
+#         sed -i 's/_1$//' "$pep_file"
+#         awk '/^>/ {print; next} {gsub(/X+$/, ""); print}' "$pep_file" > "${pep_file}.tmp" && mv "${pep_file}.tmp" "$pep_file"
+#         echo "✓ 翻译: $(basename "$pep_file")"
+#     else
+#         echo "✗ 翻译失败: $(basename "$nucl_file")" >&2
+# fi
+# }
+
 translate_one() {
     nucl_file="$1"
     pep_file="${nucl_file%.nucl.fa}.pep.fa"
     
-    if transeq -sequence "$nucl_file" -outseq "$pep_file" -frame 1 -table 1 -clean 2>/dev/null; then
+    if /home/user/data3/lit/anaconda3/envs/biotools/bin/python3 kaks/trim_and_translate.py "$nucl_file" "$pep_file"; then
         echo "✓ 翻译: $(basename "$pep_file")"
     else
         echo "✗ 翻译失败: $(basename "$nucl_file")" >&2
@@ -51,6 +64,9 @@ export -f translate_one
 
 # find "$target_dir" -name "*.ortholog.nucl.fa" | head -n50|parallel -j 50 translate_one
 find "$target_dir" -name "*.ortholog.nucl.fa" |parallel -j 50 translate_one
+# for file in $(find "$target_dir" -name "*.ortholog.nucl.fa");do
+#   translate_one $file
+# done
 
 echo ""
 echo "Done!"

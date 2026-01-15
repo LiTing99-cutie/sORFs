@@ -2,7 +2,8 @@
 
 # 输入文件
 vcf=/home/user/data3/lit/project/sORFs/11-denovo-list/public_data/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_AllVar_QC_metrics.vcf.gz
-CDS_bed=/home/user/data3/lit/project/sORFs/10-feature-egi/processed/seve_list_compare/input_for_ortholog_extraction/noncano.canonical.intergenic_orfs.lnc_orfs.bed
+# CDS_bed=/home/user/data3/lit/project/sORFs/10-feature-egi/processed/seve_list_compare/input_for_ortholog_extraction/noncano.canonical.intergenic_orfs.lnc_orfs.bed
+CDS_bed=/home/user/data3/lit/project/sORFs/10-feature-egi/processed/seve_list_compare/input_for_pnps/intergenic.lnc.noncano.cano.orfs.bed
 out_dir=$(realpath ../processed/pnps/orf_regions)
 mkdir -p $out_dir
 # 检查VCF是否有索引

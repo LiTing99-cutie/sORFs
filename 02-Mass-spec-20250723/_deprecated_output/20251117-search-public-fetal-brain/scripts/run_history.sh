@@ -1,0 +1,1 @@
+nohup bash run.human.fetal.brain.20251117.sh &> ../log/run.human.fetal.brain.20251117.log &

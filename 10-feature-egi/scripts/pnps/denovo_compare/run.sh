@@ -1,0 +1,1 @@
+nohup bash pnps/denovo_compare/1-4.combine.sh &> ../log/1-4.combine.20251211.log &

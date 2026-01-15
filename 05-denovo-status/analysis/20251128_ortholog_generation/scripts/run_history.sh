@@ -1,0 +1,1 @@
+nohup bash extract_ortholog.sh &> ../log/extract_ortholog.log &
